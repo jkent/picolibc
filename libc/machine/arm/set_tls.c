@@ -49,21 +49,9 @@
 extern void *__tls[];
 #endif
 
-/* The size of the thread control block.
- * TLS relocations are generated relative to
- * a location this far *before* the first thread
- * variable (!)
- * NB: The actual size before tp also includes padding
- * to align up to the alignment of .tdata/.tbss.
- */
-#define TCB_SIZE 8
-extern char __arm32_tls_tcb_offset;
-#define TP_OFFSET ((size_t)&__arm32_tls_tcb_offset)
-
 void
 _set_tls(void *tls)
 {
-    tls = (uint8_t *)tls - TP_OFFSET;
 #ifdef ARM_TLS_CP15
     __asm__("mcr p15, 0, %0, cr13, cr0, 3" : : "r"(tls));
 #else
